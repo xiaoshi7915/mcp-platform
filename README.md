@@ -98,7 +98,7 @@ npm run build
 
 ```bash
 # 克隆代码库
-git clone https://github.com/chenxiaoshivivid/mcp-platform.git
+git clone https://github.com/xiaoshi7915/mcp-platform.git
 cd mcp-platform
 
 # 创建环境变量文件
@@ -118,7 +118,7 @@ docker-compose logs -f
 
 ```bash
 # 克隆代码库
-git clone https://github.com/chenxiaoshivivid/mcp-platform.git
+git clone https://github.com/xiaoshi7915/mcp-platform.git
 cd mcp-platform
 
 # 创建环境变量文件
@@ -355,7 +355,7 @@ http://localhost:5005/docs
 
 ```bash
 # 克隆仓库 (如果尚未克隆)
-git clone https://github.com/chenxiaoshivivid/mcp-platform.git
+git clone https://github.com/xiaoshi7915/mcp-platform.git
 cd mcp-platform
 
 # 创建并配置.gitignore文件，确保敏感信息不会被提交

@@ -1,0 +1,219 @@
+import axios from 'axios'
+
+// 获取当前环境的API基础URL
+const getBaseUrl = () => {
+  // 如果是生产环境，使用相对路径
+  if (import.meta.env.PROD) {
+    return '/api'
+  }
+  // 开发环境使用代理
+  return '/api'
+}
+
+// 创建axios实例
+const api = axios.create({
+  baseURL: getBaseUrl(),
+  timeout: 15000, // 增加超时时间，考虑网络延迟
+  headers: {
+    'Content-Type': 'application/json'
+  }
+})
+
+// 响应拦截器 - 处理错误
+api.interceptors.response.use(
+  response => response.data,
+  error => {
+    // 处理401未授权的情况
+    if (error.response && error.response.status === 401) {
+      // 可以在这里触发注销或重新登录流程
+      console.error('认证失败，请重新登录')
+    }
+    
+    // 处理网络错误
+    if (!error.response) {
+      console.error('网络错误，请检查您的网络连接')
+      return Promise.reject('网络错误，请检查您的网络连接')
+    }
+    
+    return Promise.reject(error.response?.data || error.message || '网络错误')
+  }
+)
+
+// API服务
+export default {
+  // 工具相关API
+  tools: {
+    // 获取工具列表
+    getList(params) {
+      return api.get('/tools/', { params })
+    },
+    // 获取单个工具
+    getOne(id) {
+      return api.get(`/tools/${id}/`)
+    },
+    // 创建工具
+    create(data) {
+      return api.post('/tools/', data)
+    },
+    // 更新工具
+    update(id, data) {
+      return api.put(`/tools/${id}/`, data)
+    },
+    // 删除工具
+    delete(id) {
+      return api.delete(`/tools/${id}/`)
+    },
+    // 激活工具
+    activate(id) {
+      return api.post(`/tools/${id}/activate/`)
+    },
+    // 停用工具
+    deactivate(id) {
+      return api.post(`/tools/${id}/deactivate/`)
+    },
+    // 调用工具
+    invoke(id, params) {
+      return api.post(`/tools/${id}/invoke/`, params)
+    }
+  },
+  
+  // 配置相关API
+  configs: {
+    // 获取配置列表
+    getList(params) {
+      return api.get('/configs/', { params })
+    },
+    // 获取单个配置
+    get(id) {
+      return api.get(`/configs/${id}/`)
+    },
+    // 创建配置
+    create(data) {
+      return api.post('/configs/', data)
+    },
+    // 更新配置
+    update(id, data) {
+      return api.put(`/configs/${id}/`, data)
+    },
+    // 删除配置
+    delete(id) {
+      return api.delete(`/configs/${id}/`)
+    },
+    // 激活配置
+    activate(id) {
+      return api.post(`/configs/${id}/activate/`)
+    },
+    // 停用配置
+    deactivate(id) {
+      return api.post(`/configs/${id}/deactivate/`)
+    }
+  },
+  
+  // 日志相关API
+  logs: {
+    // 获取日志列表
+    getList(params) {
+      return api.get('/logs/', { params })
+    },
+    // 获取单个日志
+    getOne(id) {
+      return api.get(`/logs/${id}/`)
+    },
+    // 获取工具的日志
+    getToolLogs(toolId, params) {
+      return api.get(`/logs/tool/${toolId}/`, { params })
+    },
+    // 创建日志
+    create(data) {
+      return api.post('/logs/', data)
+    },
+    // 删除日志
+    delete(id) {
+      return api.delete(`/logs/${id}/`)
+    },
+    // 清空日志
+    clear(params) {
+      return api.post('/logs/clear/', params || {})
+    }
+  },
+  
+  // 模板相关API
+  templates: {
+    // 获取模板列表
+    getList(params) {
+      return api.get('/templates/', { params })
+    },
+    // 获取单个模板
+    getOne(id) {
+      return api.get(`/templates/${id}/`)
+    },
+    // 创建模板
+    create(data) {
+      return api.post('/templates/', data)
+    },
+    // 更新模板
+    update(id, data) {
+      return api.put(`/templates/${id}/`, data)
+    },
+    // 删除模板
+    delete(id) {
+      return api.delete(`/templates/${id}/`)
+    },
+    // 从模板导入工具
+    import(id, data) {
+      return api.post(`/templates/${id}/import/`, data || {})
+    }
+  },
+  
+  // 仪表盘相关API
+  dashboard: {
+    // 获取概览数据
+    getOverview() {
+      return api.get('/dashboard/overview/')
+    },
+    // 获取每日统计
+    getDailyStats() {
+      return api.get('/dashboard/stats/daily/')
+    },
+    // 获取工具类型分布
+    getToolTypes() {
+      return api.get('/dashboard/tool_types/')
+    },
+    // 获取最近活动
+    getRecentActivities() {
+      return api.get('/dashboard/recent_activities/')
+    }
+  },
+  
+  // 认证相关API
+  auth: {
+    // 用户注册
+    register(data) {
+      return api.post('/auth/register/', data)
+    },
+    // 用户登录
+    login(data) {
+      return api.post('/auth/login', data)
+    },
+    // 获取当前用户信息
+    getInfo() {
+      return api.get('/auth/me/')
+    },
+    // 获取用户列表（管理员）
+    getUsers() {
+      return api.get('/auth/users/')
+    },
+    // 获取单个用户（管理员）
+    getUser(userId) {
+      return api.get(`/auth/users/${userId}/`)
+    },
+    // 更新用户（管理员）
+    updateUser(userId, data) {
+      return api.put(`/auth/users/${userId}/`, data)
+    },
+    // 修改密码
+    changePassword(data) {
+      return api.post('/auth/change-password/', data)
+    }
+  }
+} 

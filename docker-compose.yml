@@ -1,0 +1,52 @@
+# docker-compose.yml
+version: '3.11'
+
+services:
+  mcp_platform:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "5005:5005"
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./mcp_tools:/app/mcp_tools
+      - ./templates:/app/templates
+    environment:
+      - FLASK_APP=backend/app.py
+      - FLASK_ENV=production
+      - FLASK_DEBUG=False
+      - FLASK_RUN_HOST=0.0.0.0
+      - FLASK_RUN_PORT=5005
+      - DATABASE_URL=sqlite:///data/mcp_platform.db
+      # 如需使用MySQL数据库，取消以下注释并调整参数
+      # - DATABASE_URL=mysql+pymysql://username:password@mysql:3306/mcp_platform?charset=utf8mb4
+      - MCP_TOOLS_DIR=/app/mcp_tools
+      - LOG_DIR=/app/logs
+      - TEMPLATE_DIR=/app/templates
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5005/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # 如需使用MySQL数据库，取消以下注释
+  # mysql:
+  #   image: mysql:8.0
+  #   restart: always
+  #   environment:
+  #     - MYSQL_ROOT_PASSWORD=root_password
+  #     - MYSQL_DATABASE=mcp_platform
+  #     - MYSQL_USER=username
+  #     - MYSQL_PASSWORD=password
+  #   volumes:
+  #     - mysql_data:/var/lib/mysql
+  #   ports:
+  #     - "3306:3306"
+
+# 如需使用MySQL数据库，取消以下注释
+# volumes:
+#   mysql_data:

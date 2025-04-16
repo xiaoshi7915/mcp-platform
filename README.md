@@ -11,26 +11,6 @@ MCP管理平台是一个用于管理和监控各种工具、配置、模板和�
 - **仪表盘**：展示系统概览数据和统计信息
 - **用户认证**：提供用户注册、登录和权限管理功能
 
-
-## 技术栈
-
-### 前端
-- Vue.js 3 (使用Composition API)
-- Vite 构建工具
-- Element Plus 组件库
-- Axios 用于API请求
-- Vue Router 路由管理
-- Pinia 状态管理
-- Vue I18n 国际化支持
-
-### 后端
-- Flask Web框架
-- SQLAlchemy ORM
-- SQLite/MySQL 数据库
-- Flask-CORS 跨域支持
-- Flasgger Swagger文档
-- JWT 用户认证
-
 ## 安装与部署
 
 ### 方式一：常规安装
